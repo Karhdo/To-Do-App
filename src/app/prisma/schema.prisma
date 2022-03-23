@@ -23,6 +23,7 @@ model Task {
   id Int @default(autoincrement()) @id
   nameTask String @db.VarChar(255)
   deadline DateTime @db.Timestamp()
+  description String @db.VarChar(100)
   createdAt DateTime @default(now())
   updateAd DateTime @updatedAt
 
@@ -36,7 +37,6 @@ model TaskDetail {
   id Int @default(autoincrement()) @id
   nameTaskDetail String @db.VarChar(50)
   state Boolean @default(false)
-  description String @db.VarChar(100)
 
   task Task @relation(fields: [taskId], references: [id], name: "TaskDetail_Task_TaskId")
   taskId Int

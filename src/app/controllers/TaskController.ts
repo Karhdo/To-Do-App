@@ -7,12 +7,13 @@ class TaskController {
     // POST /tasks/store
     async store(req: Request, res: Response): Promise<void> {
         try {
-            const { nameTask, userId, deadline } = req.body
+            const { nameTask, userId, description, deadline } = req.body
 
             const task = await prisma.task.create({
                 data: {
                     userId: userId,
                     nameTask: nameTask,
+                    description: description,
                     deadline: deadline,
                 },
             })

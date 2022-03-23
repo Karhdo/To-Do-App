@@ -7,12 +7,11 @@ class TaskDetailController {
     // POST tasks-detail/store
     async store(req: Request, res: Response): Promise<void> {
         try {
-            const { nameTaskDetail, description, taskId } = req.body
+            const { nameTaskDetail, taskId } = req.body
 
             const taskDetail = await prisma.taskDetail.create({
                 data: {
                     nameTaskDetail: nameTaskDetail,
-                    description: description,
                     taskId: taskId,
                 },
             })
