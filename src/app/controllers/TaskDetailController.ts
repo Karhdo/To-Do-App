@@ -21,7 +21,6 @@ class TaskDetailController {
             res.status(500).json({ error: error })
         }
     }
-
     // GET tasks-detail/all
     async getAllTasksDetail(req: Request, res: Response): Promise<void> {
         try {
@@ -32,7 +31,6 @@ class TaskDetailController {
             res.status(500).json({ error: error })
         }
     }
-
     // GET tasks-detail/:task_id
     async getTasksDetailByTaskId(req: Request, res: Response): Promise<void> {
         try {
@@ -49,7 +47,6 @@ class TaskDetailController {
             res.status(500).json({ error: error })
         }
     }
-
     // DELETE tasks-detail/:taskDetail_id
     async deleteTaskDetailById(req: Request, res: Response): Promise<void> {
         try {
@@ -58,6 +55,27 @@ class TaskDetailController {
             const taskDetail = await prisma.taskDetail.delete({
                 where: {
                     id: taskDetailId,
+                },
+            })
+
+            res.json(taskDetail)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
+    }
+    // PUT tasks-detail/:taskDetail_id
+    async updateTaskDetailById(req: Request, res: Response): Promise<void> {
+        try {
+            const id = +req.params.taskDetail_id
+            const { nameTaskDetail, state } = req.body
+
+            const taskDetail = await prisma.taskDetail.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    nameTaskDetail: nameTaskDetail,
+                    state: state,
                 },
             })
 

@@ -53,6 +53,28 @@ class TaskController {
             res.status(500).json({ error: error })
         }
     }
+    // PUT /tasks/:task_id
+    async updateTaskById(req: Request, res: Response): Promise<void> {
+        try {
+            const id = +req.params.task_id
+            const { nameTask, deadline, description } = req.body
+
+            const task = await prisma.task.update({
+                where: {
+                    id: id,
+                },
+                data: {
+                    nameTask: nameTask,
+                    deadline: deadline,
+                    description: description,
+                },
+            })
+
+            res.json(task)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
+    }
     // DELETE /tasks/:task_id
     async deleteTaskById(req: Request, res: Response): Promise<void> {
         try {
