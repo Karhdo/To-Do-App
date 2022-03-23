@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @default(autoincrement()) @id
+  email   String   @unique
+  name String @db.VarChar(50)
+  password String @db.VarChar(100)
+
+  tasks Task[] @relation(name: "Task_User_UserId")
+}
+
+model Task {
+  id Int @default(autoincrement()) @id
+  nameTask String @db.VarChar(255)
+  deadline DateTime @db.Timestamp()
+  createdAt DateTime @default(now())
+  updateAd DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], name: "Task_User_UserId")
+  userId Int
+
+  tasksDetail TaskDetail[] @relation(name: "TaskDetail_Task_TaskId")
+}
+
+model TaskDetail {
+  id Int @default(autoincrement()) @id
+  nameTaskDetail String @db.VarChar(50)
+  state Boolean @default(false)
+  description String @db.VarChar(100)
+
+  task Task @relation(fields: [taskId], references: [id], name: "TaskDetail_Task_TaskId")
+  taskId Int
+}
