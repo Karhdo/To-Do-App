@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 class TaskController {
     // POST /tasks/store
     async store(req: Request, res: Response): Promise<void> {
         try {
-            const { nameTask, userId, deadline } = req.body;
+            const { nameTask, userId, deadline } = req.body
 
             const task = await prisma.task.create({
                 data: {
@@ -15,11 +15,11 @@ class TaskController {
                     nameTask: nameTask,
                     deadline: deadline,
                 },
-            });
+            })
 
-            res.json(task);
+            res.json(task)
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ error: error })
         }
     }
     // GET /tasks/all
@@ -27,17 +27,17 @@ class TaskController {
         try {
             const tasks = await prisma.task.findMany({
                 include: { tasksDetail: true },
-            });
+            })
 
-            res.json(tasks);
+            res.json(tasks)
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ error: error })
         }
     }
     // GET /tasks/:task_id
     async getTaskById(req: Request, res: Response): Promise<void> {
         try {
-            const id = +req.params.task_id;
+            const id = +req.params.task_id
             const task = await prisma.task.findUnique({
                 where: {
                     id: id,
@@ -45,33 +45,33 @@ class TaskController {
                 include: {
                     tasksDetail: true,
                 },
-            });
+            })
 
-            res.json(task);
+            res.json(task)
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ error: error })
         }
     }
     // DELETE /tasks/:task_id
     async deleteTaskById(req: Request, res: Response): Promise<void> {
         try {
-            const taskId = +req.params.task_id;
+            const taskId = +req.params.task_id
 
             await prisma.taskDetail.deleteMany({
                 where: { taskId: taskId },
-            });
+            })
 
             const task = await prisma.task.delete({
                 where: {
                     id: taskId,
                 },
-            });
+            })
 
-            res.json(task);
+            res.json(task)
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ error: error })
         }
     }
 }
 
-export default new TaskController();
+export default new TaskController()
