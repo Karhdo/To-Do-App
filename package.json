@@ -35,7 +35,7 @@
         "schema": "./src/app/prisma/schema.prisma"
     },
     "lint-staged": {
-        "src/**/*.{js,json,scss}": [
+        "src/**/*.{ts,js,json,scss}": [
             "prettier --single-quote --trailing-comma all --tab-width 4 --write"
         ]
     }
