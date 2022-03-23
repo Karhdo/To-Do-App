@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "nodemon ./src/index.ts",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "beautify": "prettier **/*.ts --write"
     },
     "author": "Trong Khanh",
     "license": "ISC",
