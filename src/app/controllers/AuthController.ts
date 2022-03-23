@@ -36,16 +36,11 @@ class AuthController {
                 },
             })
 
-            if (!user)
-                return res.status(401).json({ error: 'Email is incorrect' })
+            if (!user) return res.status(401).json({ error: 'Email is incorrect' })
 
             // Password check
-            const validationPassword = await bcrypt.compare(
-                password,
-                user.password,
-            )
-            if (!validationPassword)
-                return res.status(401).json({ error: 'Password is incorrect' })
+            const validationPassword = await bcrypt.compare(password, user.password)
+            if (!validationPassword) return res.status(401).json({ error: 'Password is incorrect' })
 
             //JWT
             let tokens = jwtTokens(user.id, user.email, user.password)
@@ -59,22 +54,16 @@ class AuthController {
     async refreshToken(req: Request, res: Response) {
         try {
             const refreshToken = req.cookies.refresh_token
-            if (refreshToken == null)
-                return res.status(401).json({ error: 'Null refresh token' })
-            jwt.verify(
-                refreshToken,
-                process.env.REFRESH_TOKEN_SECRET as string,
-                (error: any, user: any) => {
-                    if (error)
-                        return res.status(401).json({ error: error.message })
+            if (refreshToken == null) return res.status(401).json({ error: 'Null refresh token' })
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string, (error: any, user: any) => {
+                if (error) return res.status(401).json({ error: error.message })
 
-                    let tokens = jwtTokens(user.id, user.email, user.name)
-                    res.cookie('refresh_token', tokens.refreshToken, {
-                        httpOnly: true,
-                    })
-                    res.json(tokens)
-                },
-            )
+                let tokens = jwtTokens(user.id, user.email, user.name)
+                res.cookie('refresh_token', tokens.refreshToken, {
+                    httpOnly: true,
+                })
+                res.json(tokens)
+            })
         } catch (error) {
             res.status(500).json({ error: error })
         }
