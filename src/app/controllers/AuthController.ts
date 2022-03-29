@@ -43,7 +43,7 @@ class AuthController {
             if (!validationPassword) return res.status(401).json({ error: 'Password is incorrect' })
 
             //JWT
-            let tokens = jwtTokens(user.id, user.email, user.password)
+            let tokens = jwtTokens({ id: user.id, email: user.email, name: user.name })
             res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true })
             res.json(tokens)
         } catch (error) {
@@ -58,7 +58,7 @@ class AuthController {
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string, (error: any, user: any) => {
                 if (error) return res.status(401).json({ error: error.message })
 
-                let tokens = jwtTokens(user.id, user.email, user.name)
+                let tokens = jwtTokens({ id: user.id, email: user.email, name: user.name })
                 res.cookie('refresh_token', tokens.refreshToken, {
                     httpOnly: true,
                 })

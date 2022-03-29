@@ -6,16 +6,12 @@ function authorizationToken(req: Request, res: Response, next: NextFunction) {
     const token = authHeader && authHeader.split(' ')[1]
 
     if (token == null) return res.status(401).json({ error: 'Null token' })
-    jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET as string,
-        (error, user) => {
-            if (error) return res.status(401).json({ error: error.message })
-            req.body.user = user
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (error, user) => {
+        if (error) return res.status(401).json({ error: error.message })
+        req.user = user as AuthorizedUser
 
-            next()
-        },
-    )
+        next()
+    })
 }
 
 export { authorizationToken }
