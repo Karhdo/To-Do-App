@@ -4,15 +4,20 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 class TaskDetailController {
-    // POST tasks-detail/store
-    async store(req: Request, res: Response): Promise<void> {
+    //---------------- USER ----------------
+    // PUT tasks-detail/:id
+    async updateTaskDetailById(req: Request, res: Response): Promise<void> {
         try {
-            const { nameTaskDetail, taskId } = req.body
+            const id = +req.params.id
+            const { nameTaskDetail, state } = req.body
 
-            const taskDetail = await prisma.taskDetail.create({
+            const taskDetail = await prisma.taskDetail.update({
+                where: {
+                    id,
+                },
                 data: {
-                    nameTaskDetail: nameTaskDetail,
-                    taskId: taskId,
+                    nameTaskDetail,
+                    state,
                 },
             })
 
@@ -21,65 +26,30 @@ class TaskDetailController {
             res.status(500).json({ error: error })
         }
     }
+    // DELETE tasks-detail/:id
+    async deleteTaskDetailById(req: Request, res: Response): Promise<void> {
+        try {
+            const id = +req.params.id
+
+            const taskDetail = await prisma.taskDetail.delete({
+                where: {
+                    id,
+                },
+            })
+
+            res.json(taskDetail)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
+    }
+
+    //---------------- ADMIN ----------------
     // GET tasks-detail/all
     async getAllTasksDetail(req: Request, res: Response): Promise<void> {
         try {
             const tasksDetail = await prisma.taskDetail.findMany()
 
             res.json(tasksDetail)
-        } catch (error) {
-            res.status(500).json({ error: error })
-        }
-    }
-    // GET tasks-detail/:task_id
-    async getTasksDetailByTaskId(req: Request, res: Response): Promise<void> {
-        try {
-            const taskId = +req.params.task_id
-
-            const tasksDetail = await prisma.taskDetail.findMany({
-                where: {
-                    taskId: taskId,
-                },
-            })
-
-            res.json(tasksDetail)
-        } catch (error) {
-            res.status(500).json({ error: error })
-        }
-    }
-    // DELETE tasks-detail/:taskDetail_id
-    async deleteTaskDetailById(req: Request, res: Response): Promise<void> {
-        try {
-            const taskDetailId = +req.params.taskDetail_id
-
-            const taskDetail = await prisma.taskDetail.delete({
-                where: {
-                    id: taskDetailId,
-                },
-            })
-
-            res.json(taskDetail)
-        } catch (error) {
-            res.status(500).json({ error: error })
-        }
-    }
-    // PUT tasks-detail/:taskDetail_id
-    async updateTaskDetailById(req: Request, res: Response): Promise<void> {
-        try {
-            const id = +req.params.taskDetail_id
-            const { nameTaskDetail, state } = req.body
-
-            const taskDetail = await prisma.taskDetail.update({
-                where: {
-                    id: id,
-                },
-                data: {
-                    nameTaskDetail: nameTaskDetail,
-                    state: state,
-                },
-            })
-
-            res.json(taskDetail)
         } catch (error) {
             res.status(500).json({ error: error })
         }

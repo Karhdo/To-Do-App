@@ -4,7 +4,47 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 class UserController {
-    //ADMIN
+    //---------------- USER ----------------
+    // GET /users/me
+    async getCurrentUser(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.user.id
+
+            const users = await prisma.user.findUnique({
+                where: {
+                    id: userId,
+                },
+                include: {
+                    tasks: { include: { tasksDetail: true } },
+                },
+            })
+
+            res.json(users)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
+    }
+    // GET /users/me/task/all
+    async getAllTasksByCurrentUser(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.user.id
+
+            const task = await prisma.task.findMany({
+                where: {
+                    userId,
+                },
+                include: {
+                    tasksDetail: true,
+                },
+            })
+
+            res.json(task)
+        } catch (error) {
+            res.status(500).json({ error: error })
+        }
+    }
+
+    //---------------- ADMIN ----------------
     // GET /users/all
     async getAllUsers(req: Request, res: Response): Promise<void> {
         try {
@@ -19,15 +59,14 @@ class UserController {
             res.status(500).json({ error: error })
         }
     }
-    // GET /users/:user_id
+    // GET /users/:id
     async getUsersById(req: Request, res: Response): Promise<void> {
         try {
-            // @ts-ignore
-            const id = req.params.user_id || req.user.id
+            const id = +req.params.id
 
             const users = await prisma.user.findUnique({
                 where: {
-                    id: +id,
+                    id,
                 },
                 include: {
                     tasks: true,
@@ -39,39 +78,14 @@ class UserController {
             res.status(500).json({ error: error })
         }
     }
-    // GET /users/:user_id/task/all
-    async getAllTasksByUserId(req: Request, res: Response): Promise<void> {
-        try {
-            const id = +req.params.user_id || req.user.id
-
-            const task = await prisma.task.findMany({
-                where: {
-                    userId: id,
-                },
-                include: {
-                    tasksDetail: true,
-                },
-            })
-
-            res.json(task)
-        } catch (error) {
-            res.status(500).json({ error: error })
-        }
-    }
-    // DELETE /users/:user_id
+    // DELETE /users/:id
     async deleteUserById(req: Request, res: Response): Promise<void> {
         try {
-            const id = +req.params.user_id
-
-            await prisma.task.deleteMany({
-                where: {
-                    userId: id,
-                },
-            })
+            const id = +req.params.id
 
             const user = await prisma.user.delete({
                 where: {
-                    id: id,
+                    id,
                 },
             })
 

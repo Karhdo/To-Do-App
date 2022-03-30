@@ -27,7 +27,7 @@ model Task {
   createdAt DateTime @default(now())
   updateAd DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], name: "Task_User_UserId")
+  user User @relation(name: "Task_User_UserId", fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
   tasksDetail TaskDetail[] @relation(name: "TaskDetail_Task_TaskId")
@@ -36,8 +36,13 @@ model Task {
 model TaskDetail {
   id Int @default(autoincrement()) @id
   nameTaskDetail String @db.VarChar(50)
-  state Boolean @default(false)
+  state TaskStatus @default(ToDo)
 
-  task Task @relation(fields: [taskId], references: [id], name: "TaskDetail_Task_TaskId")
+  task Task @relation(name: "TaskDetail_Task_TaskId", fields: [taskId], references: [id], onDelete: Cascade)
   taskId Int
+}
+
+enum TaskStatus{
+  ToDo
+  Done
 }
