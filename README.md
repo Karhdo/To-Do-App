@@ -1,6 +1,5 @@
 # Project To Do App
-## BackEnd
-### Build Setup
+## BackEnd - Build Setup
 
 ```bash
 # install dependencies
