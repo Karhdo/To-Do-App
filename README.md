@@ -9,5 +9,5 @@ npm install
 npm run start
 
 # format code with prettier
-npm run prettier
+npm run beautify
 ```
