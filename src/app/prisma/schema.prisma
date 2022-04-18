@@ -11,38 +11,38 @@ datasource db {
 }
 
 model User {
-  id Int @default(autoincrement()) @id
-  email   String   @unique
-  name String @db.VarChar(50)
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String @db.VarChar(50)
   password String @db.VarChar(100)
 
   tasks Task[] @relation(name: "Task_User_UserId")
 }
 
 model Task {
-  id Int @default(autoincrement()) @id
-  nameTask String @db.VarChar(255)
-  deadline DateTime @db.Timestamp()
-  description String @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updateAd DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  nameTask    String   @db.VarChar(255)
+  deadline    DateTime @db.Timestamp()
+  description String   @db.VarChar(100)
+  createdAt   DateTime @default(now())
+  updateAd    DateTime @updatedAt
 
-  user User @relation(name: "Task_User_UserId", fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(name: "Task_User_UserId", fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
   tasksDetail TaskDetail[] @relation(name: "TaskDetail_Task_TaskId")
 }
 
 model TaskDetail {
-  id Int @default(autoincrement()) @id
-  nameTaskDetail String @db.VarChar(50)
-  state TaskStatus @default(ToDo)
+  id             Int        @id @default(autoincrement())
+  nameTaskDetail String     @db.VarChar(50)
+  state          TaskStatus @default(ToDo)
 
-  task Task @relation(name: "TaskDetail_Task_TaskId", fields: [taskId], references: [id], onDelete: Cascade)
+  task   Task @relation(name: "TaskDetail_Task_TaskId", fields: [taskId], references: [id], onDelete: Cascade)
   taskId Int
 }
 
-enum TaskStatus{
+enum TaskStatus {
   ToDo
   Done
 }

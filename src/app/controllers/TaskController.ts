@@ -64,6 +64,22 @@ class TaskController {
         }
     }
     // DELETE /tasks/:id
+    async getAllTasksDetailByTask(req: Request, res: Response): Promise<void> {
+        try {
+            const id = +req.params.id;
+            const tasksDetail = await prisma.taskDetail.findMany({
+                where: {
+                    taskId: id,
+                },
+            });
+
+            res.json(tasksDetail);
+        } catch (error) {
+            res.status(500).json({ error: error });
+        }
+    }
+
+    // GET /tasks/:id/tasks-detail/all
     async deleteTaskById(req: Request, res: Response): Promise<void> {
         try {
             const taskId = +req.params.id;

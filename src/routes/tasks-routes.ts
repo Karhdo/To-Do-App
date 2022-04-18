@@ -8,6 +8,8 @@ router.post('/:id/tasks_detail/store', authorizationToken, TaskController.create
 router.get('/:id', authorizationToken, TaskController.getTaskById);
 router.put('/:id', authorizationToken, TaskController.updateTaskById);
 router.delete('/:id', authorizationToken, TaskController.deleteTaskById);
+
+router.get('/:id/tasks_detail/all', authorizationToken, TaskController.getAllTasksDetailByTask);
 //---------------- ADMIN ----------------
 router.get('/all', authorizationToken, TaskController.getAllTasks);
 
